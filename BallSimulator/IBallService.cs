@@ -69,7 +69,7 @@ namespace BallSimulator
 
         private float GenerateRandomVelocity()
         {
-            // v od -2 do 2
+            // v od -2 do 2 .jesli chcemy wieksze V np od -3 do 3 to wtedy wpisujemy: ... * 9 - 3)
             return (float)(random.NextDouble() * 4 - 2);
         }
 

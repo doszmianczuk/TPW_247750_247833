@@ -11,7 +11,7 @@
             <TextBox x:Name="numBallsPicker" Text="5" Width="100" Margin="10"/>
             <Button Content="START" Width="100" Height="20" Margin="10" Click="StartButton_Click"/>
         </StackPanel>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1" Width="800" Height="450">
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1" Width="802" Height="452">
             <Canvas x:Name="canvas" Grid.Row="1" Width="800" Height="450" />
         </Border>
     </Grid>

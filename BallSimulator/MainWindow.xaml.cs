@@ -4,7 +4,25 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-
+//Ball jako MODEL, GameViewModel jako VIEWMODEL,XAML jako VIEW,
+//BALLSERVICE jako logika . MainWindow.xaml.cs oraz .xaml jako  warstwa prezentacji
+//z warstwa DANE nwm co i jak mozna to podpiac jako ball troche, 
+//rodzielenie warstw - warstwy rozdzielilem zgonie z MVVM ale nie sa osbnymi projektami (a tak jest na wikamp :/ )
+// ---
+// !!! NIE MAMY TESTÓW: testowanie jednostkowe oraz integracyjne. Techniki MOCK nie mamy (nie trzeba ale bedzie latwiej z nia), testy jednostkoe dla warstw DANE I LOGIKA
+// !!! "Zależność od zewnętrznych repozytoriów danych:.." nie rozumiem (???)
+// !!! "luzne powiązanie warstw:..." eee no nie wiem, powiazanie wydaje sie byc luzne ale bez testow nie sprawdze tego w praktyce
+// !!! "Użycie DataBinding oraz ICommand:..." no databinding jest zaimplementowane i icommand jest chyba uzywane w MainWindow.xaml.cs dla przycisku start
+// ---
+//WAZNE: testy musimy miec bo sa potrzebne by zaliczyc zadanie. ORAZ nie rozumiem w "wytyczne do realizacji" zdania:
+//"GitHub: utworzyć release, w którym tag zostanie nadany zgodnie z Semantic Versioning 2.0.0" tam jest link do tego sementic ale nie wiem o co chodzi
+//dodatkowo:
+//w mainwindow.xaml canvas ma wymiary 800x450 a border dla niego 802x452, poniewaz scianki nie zgrywaly sie (nie wiem czemu) ciezko wytlumaczyc ale wyglada git teraz
+//!!!
+//WAZNE2: nie wiem czy wgl zadanie jest dobrze zrobione, poniewaz w etapie1 ma nie byc odbijania sie od scian ale nie mialem pomyslu jak zrobic zeby te kulki tam byly,
+//poruszaly sie i jednoczesnie nie wychodzimy poza zakres canvas. !!!TRZEBA ZAPYTAC NA ZAJECIACH CZY MOZE TAK ZOSTAC!!!
+//!!!
+//update1: dodalem issues na gita (dla nas i dla prowadzacego)
 namespace BallSimulator
 {
     public partial class MainWindow : Window
@@ -15,7 +33,7 @@ namespace BallSimulator
         public MainWindow()
         {
             InitializeComponent();
-            gameViewModel = new GameViewModel(new BallService(800, 450)); //dajemy szerokosc i wysokosc canvas (tam gdzie kulki sie poruszaja) - nie dziala cos
+            gameViewModel = new GameViewModel(new BallService(800, 450)); //dajemy szerokosc i wysokosc canvas (tam gdzie kulki sie poruszaja)
             DataContext = gameViewModel;
         }
 
