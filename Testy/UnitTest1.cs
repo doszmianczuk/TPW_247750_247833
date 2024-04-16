@@ -29,10 +29,26 @@ namespace Testy
         }
 
         [TestMethod]
+        public void RemoveBall_ShouldRemoveExistingBall()
+        {
+            // Arrange
+            _data.AddBall(_testBall);
+
+            // Act
+            bool result = _data.RemoveBall(_testBall);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.IsFalse(_data.GetBalls().Any()); // SprawdŸ, czy lista jest pusta po usuniêciu kuli.
+        }
+
+        [TestMethod]
         public void ClearBalls_ShouldRemoveAllBalls()
         {
             // Arrange
             _data.AddBall(_testBall);
+            _data.AddBall(_testBall);
+
 
             // Act
             _data.ClearBalls();

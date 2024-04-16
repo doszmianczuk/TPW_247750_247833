@@ -21,6 +21,11 @@ namespace BallSimulator
         {
             balls.Clear();
         }
+
+        public bool RemoveBall(Model ball)
+        {
+            return balls.Remove(ball);
+        }
     }
 
 }
