@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace BallSimulator
 {
-    public class Data
+    public interface IDataService
+    {
+        IEnumerable<Model> GetBalls();
+        void AddBall(Model ball);
+        void ClearBalls();
+        bool RemoveBall(Model ball);
+    }
+    public class Data : IDataService
     {
         private List<Model> balls = new List<Model>();
 

@@ -10,14 +10,14 @@ using System.Collections.Generic;
 namespace BallSimulator
 {
 
-    public interface Logika
+    public interface IBallService
     {
         void InitializeBalls(int count, int gameWidth, int gameHeight);
         void MoveBalls();
         IEnumerable<Model> GetBalls();
     }
 
-    public class BallService : Logika
+    public class BallService : IBallService
     {
         private readonly List<Model> balls = new List<Model>();
         private readonly Random random = new Random();
@@ -61,14 +61,11 @@ namespace BallSimulator
             }
         }
 
-
-        //mozemy z tego zrobic dane.cs!      bo to sa jedyne w sumie dane. reszta to logika (ball.cs jest jako model)
         private float GenerateRandomVelocity()
         {
             // v od -2 do 2 .jesli chcemy wieksze V np od -3 do 3 to wtedy wpisujemy: ... * 9 - 3)
             return (float)(random.NextDouble() * 4 - 2);
         }
-        //mozemy z tego zrobic dane.cs!
 
 
 
