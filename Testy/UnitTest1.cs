@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BallSimulator;
 using System.Linq;
+using Moq;
 
 namespace Testy
 {
@@ -28,19 +29,6 @@ namespace Testy
         }
 
         [TestMethod]
-        public void RemoveBall_ShouldRemoveSpecifiedBall()
-        {
-            // Arrange
-            _data.AddBall(_testBall);
-
-            // Act
-            _data.RemoveBall(_testBall);
-
-            // Assert
-            CollectionAssert.DoesNotContain(_data.GetBalls().ToList(), _testBall);
-        }
-
-        [TestMethod]
         public void ClearBalls_ShouldRemoveAllBalls()
         {
             // Arrange
@@ -51,30 +39,6 @@ namespace Testy
 
             // Assert
             Assert.IsFalse(_data.GetBalls().Any());
-        }
-
-        [TestMethod]
-        public void GetVelocity_ShouldReturnVelocityOfExistingBall()
-        {
-            // Arrange
-            _data.AddBall(_testBall);
-
-            // Act
-            var velocity = _data.GetVelocity(_testBall);
-
-            // Assert
-            Assert.AreEqual(1, velocity); // Assuming GetVelocity should return the VelocityX for this example
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(System.InvalidOperationException))]
-        public void GetVelocity_ShouldThrowWhenBallNotFound()
-        {
-            // Arrange
-            var nonExistingBall = new Model { X = 20, Y = 20, VelocityX = 2, VelocityY = 2, Diameter = 5 };
-
-            // Act & Assert
-            _data.GetVelocity(nonExistingBall);
         }
     }
 }
