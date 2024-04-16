@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace BallSimulator
 {
-    public class GameViewModel
+    public class ViewModel
     {
         private readonly BallService ballService;
-        public ObservableCollection<Ball> Balls { get; private set; }
+        public ObservableCollection<Model> Balls { get; private set; }
 
-        public GameViewModel(BallService ballService)
+        public ViewModel(BallService ballService)
         {
             this.ballService = ballService;
-            this.Balls = new ObservableCollection<Ball>();
+            this.Balls = new ObservableCollection<Model>();
         }
 
         public void StartGame(int ballCount, int gameWidth, int gameHeight)

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BallSimulator", "BallSimulator\BallSimulator.csproj", "{1693473F-5303-4CFC-8E42-54394E29E997}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{760F8897-EF56-4A49-A2EF-F54FD3EC3449}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testy", "Testy\Testy.csproj", "{060073EB-62F2-4E9B-9788-F914C2B8D06E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{1693473F-5303-4CFC-8E42-54394E29E997}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1693473F-5303-4CFC-8E42-54394E29E997}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1693473F-5303-4CFC-8E42-54394E29E997}.Release|Any CPU.Build.0 = Release|Any CPU
-		{760F8897-EF56-4A49-A2EF-F54FD3EC3449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{760F8897-EF56-4A49-A2EF-F54FD3EC3449}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{760F8897-EF56-4A49-A2EF-F54FD3EC3449}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{760F8897-EF56-4A49-A2EF-F54FD3EC3449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060073EB-62F2-4E9B-9788-F914C2B8D06E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060073EB-62F2-4E9B-9788-F914C2B8D06E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060073EB-62F2-4E9B-9788-F914C2B8D06E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060073EB-62F2-4E9B-9788-F914C2B8D06E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

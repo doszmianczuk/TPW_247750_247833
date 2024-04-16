@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BallSimulator
 {
-    public class Ball
+    public class Model
     {
         public float X { get; set; }
         public float Y { get; set; }

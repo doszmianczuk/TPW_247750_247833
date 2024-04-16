@@ -10,16 +10,16 @@ using System.Collections.Generic;
 namespace BallSimulator
 {
 
-    public interface IBallService
+    public interface Logika
     {
         void InitializeBalls(int count, int gameWidth, int gameHeight);
         void MoveBalls();
-        IEnumerable<Ball> GetBalls();
+        IEnumerable<Model> GetBalls();
     }
 
-    public class BallService : IBallService
+    public class BallService : Logika
     {
-        private readonly List<Ball> balls = new List<Ball>();
+        private readonly List<Model> balls = new List<Model>();
         private readonly Random random = new Random();
         private readonly int gameWidth;
         private readonly int gameHeight;
@@ -32,7 +32,7 @@ namespace BallSimulator
 
 
 
-        private void CheckCollisionWithWalls(Ball ball)
+        private void CheckCollisionWithWalls(Model ball)
         {
             if (ball.X - ball.Diameter / 2 <= 0 || ball.X + ball.Diameter / 2 >= gameWidth)
             {
@@ -50,7 +50,7 @@ namespace BallSimulator
             balls.Clear();
             for (int i = 0; i < count; i++)
             {
-                balls.Add(new Ball
+                balls.Add(new Model
                 {
                     X = random.Next(10, gameWidth - 10),
                     Y = random.Next(10, gameHeight - 10),
@@ -84,7 +84,7 @@ namespace BallSimulator
             }
         }
 
-        public IEnumerable<Ball> GetBalls()
+        public IEnumerable<Model> GetBalls()
         {
             return balls;
         }

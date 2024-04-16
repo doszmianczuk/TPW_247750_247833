@@ -4,7 +4,7 @@ using Moq;
 // TESTY NIE DZIALAJA!!!!!
 namespace Tests
 {
-    [TestFixture]
+    [TestClass]
     public class GameViewModelTests
     {
         private Mock<IBallService> mockBallService;
@@ -18,7 +18,7 @@ namespace Tests
             mockBallService.Setup(service => service.GetBalls()).Returns(new List<Ball>());
         }
 
-        [Test]
+        [TestMethod]
         public void StartGame_ShouldInvokeInitializeBallsOnBallService()
         {
            
