@@ -21,6 +21,17 @@ namespace BallSimulator
         {
             balls.Clear();
         }
+
+        public void RemoveBall(Model ball)
+        {
+            delBalls.Remove(ball);
+        }
+
+        public float GetVelocity(Model ball)
+        {
+            var foundBall = balls.FirstOrDefault(b => b == ball);
+            return foundBall?.velocity ?? throw new InvalidOperationException("Ball not found.");
+        }
     }
 
 }
