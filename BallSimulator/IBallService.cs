@@ -45,12 +45,6 @@ namespace BallSimulator
         }
 
 
-        private float Clamp(float value, float min, float max)
-        {
-            return (value < min) ? min : (value > max) ? max : value;
-        }
-
-
         public void InitializeBalls(int count, int gameWidth, int gameHeight)
         {
             balls.Clear();
@@ -67,11 +61,16 @@ namespace BallSimulator
             }
         }
 
+
+        //mozemy z tego zrobic dane.cs!      bo to sa jedyne w sumie dane. reszta to logika (ball.cs jest jako model)
         private float GenerateRandomVelocity()
         {
             // v od -2 do 2 .jesli chcemy wieksze V np od -3 do 3 to wtedy wpisujemy: ... * 9 - 3)
             return (float)(random.NextDouble() * 4 - 2);
         }
+        //mozemy z tego zrobic dane.cs!
+
+
 
         public void MoveBalls()
         {

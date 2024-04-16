@@ -6,11 +6,11 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 //Ball jako MODEL, GameViewModel jako VIEWMODEL,XAML jako VIEW,
 //BALLSERVICE jako logika . MainWindow.xaml.cs oraz .xaml jako  warstwa prezentacji
-//z warstwa DANE nwm co i jak mozna to podpiac jako ball troche, 
+//z warstwa DANE nwm co i jak mozna to podpiac jako ball troche !!LUB!! -odnosnik w iballservice. mozna jedna rzecz dac oddzielnie do fcji "dane" ktora sie stworzy
+//Zależność od zewnętrznych repozytoriów danych- nwm o co chodzi
 //rodzielenie warstw - warstwy rozdzielilem zgonie z MVVM ale nie sa osbnymi projektami (a tak jest na wikamp :/ )
 // ---
 // !!! NIE MAMY TESTÓW: testowanie jednostkowe oraz integracyjne. Techniki MOCK nie mamy (nie trzeba ale bedzie latwiej z nia), testy jednostkoe dla warstw DANE I LOGIKA
-// !!! "Zależność od zewnętrznych repozytoriów danych:.." nie rozumiem (???)
 // !!! "luzne powiązanie warstw:..." eee no nie wiem, powiazanie wydaje sie byc luzne ale bez testow nie sprawdze tego w praktyce
 // !!! "Użycie DataBinding oraz ICommand:..." no databinding jest zaimplementowane i icommand jest chyba uzywane w MainWindow.xaml.cs dla przycisku start
 // ---
