@@ -8,3 +8,7 @@ using System.Windows;
                                                 //(used if a resource is not found in the page,
                                                 // app, or any theme specific resource dictionaries)
 )]
+//zawiera inf o lokalizacji zasobow dla motywow i zasobow generycznych aplikacji
+
+// Ten plik konfiguruje, gdzie aplikacja powinna szukaæ zasobów, takich jak style i obrazy,
+// kiedy nie znajdzie ich w standardowych lokalizacjach.

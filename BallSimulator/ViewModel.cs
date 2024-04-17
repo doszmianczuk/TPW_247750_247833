@@ -5,39 +5,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//ViewModel zarządza stanem aplikacji, używając BallService do manipulacji piłkami i aktualizacji ich stanu na interfejsie użytkownika.
+
 namespace BallSimulator
 {
     public class ViewModel
     {
-        private readonly BallService ballService;
-        public ObservableCollection<Model> Balls { get; private set; }
+        private readonly BallService ballService; // Serwis zarządzający logiką piłek.
+        public ObservableCollection<Model> Balls { get; private set; } // Kolekcja piłek do bindowania z UI.
 
         public ViewModel(BallService ballService)
         {
-            this.ballService = ballService;
-            this.Balls = new ObservableCollection<Model>();
+            this.ballService = ballService; // Inicjalizacja serwisu piłek.
+            this.Balls = new ObservableCollection<Model>(); // Inicjalizacja kolekcji.
         }
 
         public void StartGame(int ballCount, int gameWidth, int gameHeight)
         {
-            ballService.InitializeBalls(ballCount, gameWidth, gameHeight);
-            UpdateBallsCollection();
+            ballService.InitializeBalls(ballCount, gameWidth, gameHeight); // Inicjalizacja piłek.
+            UpdateBallsCollection(); // Aktualizacja kolekcji piłek.
         }
 
         public void UpdateGame()
         {
-            ballService.MoveBalls();
-            UpdateBallsCollection();
+            ballService.MoveBalls(); // Ruch piłek.
+            UpdateBallsCollection(); // Aktualizacja kolekcji.
         }
 
         private void UpdateBallsCollection()
         {
-            Balls.Clear();
+            Balls.Clear(); // Czyszczenie kolekcji.
             foreach (var ball in ballService.GetBalls())
             {
-                Balls.Add(ball);
+                Balls.Add(ball); // Dodawanie piłek do kolekcji.
             }
         }
     }
+
 
 }

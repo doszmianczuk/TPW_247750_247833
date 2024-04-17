@@ -5,21 +5,25 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
+//Główne okno aplikacji, które inicjalizuje ViewModel, BallService i odpowiada na interakcje użytkownika.
+
 namespace BallSimulator
 {
     public partial class MainWindow : Window
     {
-        private ViewModel gameViewModel;
-        private DispatcherTimer gameTimer;
-        private Prezentacja ballRenderer;
+        private ViewModel gameViewModel; // ViewModel dla gry.
+        private DispatcherTimer gameTimer; // Timer do cyklicznego aktualizowania stanu gry.
+        private Prezentacja ballRenderer; // Obiekt do rysowania piłek na kanwie.
 
         public MainWindow()
         {
-            InitializeComponent();
-            gameViewModel = new ViewModel(new BallService(800, 450)); //dajemy szerokosc i wysokosc canvas (tam gdzie kulki sie poruszaja)
-            DataContext = gameViewModel;
-            ballRenderer = new Prezentacja();
+            InitializeComponent(); // Metoda inicjalizująca komponenty UI zdefiniowane w XAML.
+            gameViewModel = new ViewModel(new BallService(800, 450)); // Inicjalizacja ViewModel z serwisem piłek.
+            DataContext = gameViewModel; // Ustawienie DataContext dla bindowania.
+            ballRenderer = new Prezentacja(); // Inicjalizacja renderer'a piłek.
         }
+
+        // Metody obsługi zdarzeń StartButton_Click, GameTimer_Tick
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {

@@ -7,27 +7,30 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
+//Rysuje piłki na kanwie, używając danych z modeli. Każda piłka jest reprezentowana jako Ellipse.
+
 namespace BallSimulator
 {
     public class Prezentacja
     {
         public void DrawBalls(Canvas canvas, IEnumerable<Model> balls)
         {
-            canvas.Children.Clear();
+            canvas.Children.Clear(); // Czyści kanwę przed rysowaniem nowych obiektów.
             foreach (var ball in balls)
             {
                 var ellipse = new Ellipse
                 {
-                    Fill = Brushes.Blue,
-                    Width = ball.Diameter,
-                    Height = ball.Diameter,
+                    Fill = Brushes.Blue, // Kolor wypełnienia elipsy.
+                    Width = ball.Diameter, // Szerokość elipsy zależna od średnicy piłki.
+                    Height = ball.Diameter, // Wysokość elipsy równa szerokości.
                 };
 
-                Canvas.SetLeft(ellipse, ball.X - ball.Diameter / 2);
-                Canvas.SetTop(ellipse, ball.Y - ball.Diameter / 2);
-                canvas.Children.Add(ellipse);
+                Canvas.SetLeft(ellipse, ball.X - ball.Diameter / 2); // Ustawienie elipsy na kanwie.
+                Canvas.SetTop(ellipse, ball.Y - ball.Diameter / 2); // Ustawienie elipsy na kanwie.
+                canvas.Children.Add(ellipse); // Dodanie elipsy do kanwy.
             }
         }
     }
+
 
 }
