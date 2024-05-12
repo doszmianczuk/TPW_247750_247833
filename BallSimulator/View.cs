@@ -44,22 +44,5 @@ namespace BallSimulator
             ballRenderer.DrawBalls(canvas, gameViewModel.Balls);
         }
 
-        private void DrawBalls()
-        {
-            canvas.Children.Clear();
-            foreach (var ball in gameViewModel.Balls)
-            {
-                var ellipse = new Ellipse
-                {
-                    Fill = Brushes.Blue,
-                    Width = ball.Diameter,
-                    Height = ball.Diameter
-                };
-                 
-                Canvas.SetLeft(ellipse, ball.X - ball.Diameter / 2); //centrowanie kulki na jej wspolrz x
-                Canvas.SetTop(ellipse, ball.Y - ball.Diameter / 2);  //centrowanie kulki na jej wspolrz y
-                canvas.Children.Add(ellipse);
-            }
-        }
     }
 }

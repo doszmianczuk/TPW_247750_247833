@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 
 
 namespace BallSimulator
@@ -31,6 +32,59 @@ namespace BallSimulator
         }
 
 
+        private bool AreColliding(Model ball1, Model ball2)
+        {
+            float dx = ball2.X - ball1.X;
+            float dy = ball2.Y - ball1.Y;
+            float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+            return distance <= (ball1.Diameter / 2 + ball2.Diameter / 2);
+        }
+
+
+        private void ResolveCollision(Model ball1, Model ball2)
+        {
+            float dx = ball2.X - ball1.X;
+            float dy = ball2.Y - ball1.Y;
+            float distance = (float)Math.Sqrt(dx * dx + dy * dy);
+
+            // Uniknięcie dzielenia przez zero
+            if (distance == 0) return;
+
+            float nx = dx / distance; // x component of the normal vector
+            float ny = dy / distance; // y component of the normal vector
+
+            // Rozkład prędkości na składowe normalne i styczne
+            float v1n = ball1.VelocityX * nx + ball1.VelocityY * ny; // normal component
+            float v1t = -ball1.VelocityX * ny + ball1.VelocityY * nx; // tangential component
+
+            float v2n = ball2.VelocityX * nx + ball2.VelocityY * ny;
+            float v2t = -ball2.VelocityX * ny + ball2.VelocityY * nx;
+
+            // Zastosowanie wzorów na zderzenie elastyczne
+            float v1nAfter = (v1n * (ball1.Mass - ball2.Mass) + 2 * ball2.Mass * v2n) / (ball1.Mass + ball2.Mass);
+            float v2nAfter = (v2n * (ball2.Mass - ball1.Mass) + 2 * ball1.Mass * v1n) / (ball1.Mass + ball2.Mass);
+
+            // Złożenie składowych z powrotem do prędkości wektorowej
+            ball1.VelocityX = v1nAfter * nx - v1t * ny;
+            ball1.VelocityY = v1nAfter * ny + v1t * nx;
+            ball2.VelocityX = v2nAfter * nx - v2t * ny;
+            ball2.VelocityY = v2nAfter * ny + v2t * nx;
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         private void CheckCollisionWithWalls(Model ball)
         {
@@ -46,37 +100,70 @@ namespace BallSimulator
 
         public void InitializeBalls(int count, int gameWidth, int gameHeight)
         {
+            int countMass1 = 0, countMass2 = 0;
             balls.Clear(); // Czyszczenie listy piłek.
             for (int i = 0; i < count; i++)
             {
+                float mass = GenerateRandomMass();
+                if (mass == 1) countMass1++;
+                if (mass == 2) countMass2++;
+
                 balls.Add(new Model
                 {
-                    X = random.Next(10, gameWidth - 10), // Losowa pozycja X.
-                    Y = random.Next(10, gameHeight - 10), // Losowa pozycja Y.
-                    VelocityX = GenerateRandomVelocity(), // Losowa prędkość X.
-                    VelocityY = GenerateRandomVelocity(), // Losowa prędkość Y.
-                    Diameter = 10 // Ustalona średnica piłki.
+                    X = random.Next(10, gameWidth - 10),
+                    Y = random.Next(10, gameHeight - 10),
+                    VelocityX = GenerateRandomVelocity(),
+                    VelocityY = GenerateRandomVelocity(),
+                    Diameter = 10,
+                    Mass = mass
                 });
             }
+            Console.WriteLine($"Mass 1: {countMass1}, Mass 2: {countMass2}");
         }
+
 
         private float GenerateRandomVelocity()
         {
             // v od -2 do 2 .jesli chcemy wieksze V np od -3 do 3 to wtedy wpisujemy: ... * 9 - 3)
             return (float)(random.NextDouble() * 4 - 2);
         }
+        private float GenerateRandomMass()
+        {
+            // Losuje liczbę 0 lub 1, a następnie dodaje 1, aby otrzymać 1 lub 2 jako wynik
+            return random.Next(2) + 1;
+        }
 
 
+        private readonly object lockObject = new object();
 
         public void MoveBalls()
         {
+            QuadTree quadTree = new QuadTree(0, new Rect(0, 0, gameWidth, gameHeight));
             foreach (var ball in balls)
             {
-                ball.X += ball.VelocityX; // Przesunięcie piłki w poziomie.
-                ball.Y += ball.VelocityY; // Przesunięcie piłki w pionie.
-                CheckCollisionWithWalls(ball); // Sprawdzenie kolizji z ścianami.
+                quadTree.insert(ball);
+            }
+
+            foreach (var ball in balls)
+            {
+                List<Model> returnObjects = new List<Model>();
+                quadTree.retrieve(returnObjects, ball);
+
+                foreach (var otherBall in returnObjects)
+                {
+                    if (ball != otherBall && AreColliding(ball, otherBall))
+                    {
+                        ResolveCollision(ball, otherBall);
+                    }
+                }
+
+                ball.X += ball.VelocityX;
+                ball.Y += ball.VelocityY;
+                CheckCollisionWithWalls(ball);
             }
         }
+
+
 
         public IEnumerable<Model> GetBalls()
         {

@@ -10,7 +10,7 @@ namespace BallSimulator
 {
     public class Model
     {
-        private float _x, _y, _velocityX, _velocityY, _diameter; // Prywatne zmienne dla modelu piłki.
+        private float _x, _y, _velocityX, _velocityY, _diameter, _mass; // Prywatne zmienne dla modelu piłki.
 
         public float X // Właściwość publiczna dla pozycji X.
         {
@@ -40,6 +40,13 @@ namespace BallSimulator
         {
             get { return _diameter; }
             set { _diameter = value; }
+        }
+
+
+        public float Mass
+        {
+            get { return _mass; }
+            set { _mass = value; } 
         }
     }
 

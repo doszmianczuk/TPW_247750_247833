@@ -26,10 +26,10 @@ namespace BallSimulator
             UpdateBallsCollection(); // Aktualizacja kolekcji piłek.
         }
 
-        public void UpdateGame()
+        public async Task UpdateGame()
         {
-            ballService.MoveBalls(); // Ruch piłek.
-            UpdateBallsCollection(); // Aktualizacja kolekcji.
+            await Task.Run(() => ballService.MoveBalls());
+            UpdateBallsCollection(); // Aktualizacja kolekcji piłek.
         }
 
         private void UpdateBallsCollection()

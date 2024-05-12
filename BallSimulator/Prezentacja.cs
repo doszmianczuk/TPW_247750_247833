@@ -20,9 +20,9 @@ namespace BallSimulator
             {
                 var ellipse = new Ellipse
                 {
-                    Fill = Brushes.Blue, // Kolor wypełnienia elipsy.
                     Width = ball.Diameter, // Szerokość elipsy zależna od średnicy piłki.
                     Height = ball.Diameter, // Wysokość elipsy równa szerokości.
+                    Fill = ball.Mass == 1 ? Brushes.Blue : Brushes.Red // Kolor wypełnienia elipsy w zależności od masy.
                 };
 
                 Canvas.SetLeft(ellipse, ball.X - ball.Diameter / 2); // Ustawienie elipsy na kanwie.
@@ -31,6 +31,4 @@ namespace BallSimulator
             }
         }
     }
-
-
 }
