@@ -69,10 +69,8 @@ namespace BallSimulator
             ball1.VelocityY = v1nAfter * ny + v1t * nx;
             ball2.VelocityX = v2nAfter * nx - v2t * ny;
             ball2.VelocityY = v2nAfter * ny + v2t * nx;
-
-
-
         }
+
 
 
 

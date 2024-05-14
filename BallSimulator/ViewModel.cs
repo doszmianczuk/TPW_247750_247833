@@ -4,43 +4,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 //ViewModel zarządza stanem aplikacji, używając BallService do manipulacji piłkami i aktualizacji ich stanu na interfejsie użytkownika.
 
 namespace BallSimulator
 {
-    public class ViewModel
+    public class ViewModel : INotifyPropertyChanged
     {
-        private readonly BallService ballService; // Serwis zarządzający logiką piłek.
-        public ObservableCollection<Model> Balls { get; private set; } // Kolekcja piłek do bindowania z UI.
+        private readonly BallService ballService;
+        public ObservableCollection<Model> Balls { get; private set; }
 
         public ViewModel(BallService ballService)
         {
-            this.ballService = ballService; // Inicjalizacja serwisu piłek.
-            this.Balls = new ObservableCollection<Model>(); // Inicjalizacja kolekcji.
+            this.ballService = ballService;
+            this.Balls = new ObservableCollection<Model>();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void StartGame(int ballCount, int gameWidth, int gameHeight)
         {
-            ballService.InitializeBalls(ballCount, gameWidth, gameHeight); // Inicjalizacja piłek.
-            UpdateBallsCollection(); // Aktualizacja kolekcji piłek.
+            ballService.InitializeBalls(ballCount, gameWidth, gameHeight);
+            UpdateBallsCollection();
         }
 
-        public async Task UpdateGame()
+        public void UpdateGame()
         {
-            await Task.Run(() => ballService.MoveBalls());
-            UpdateBallsCollection(); // Aktualizacja kolekcji piłek.
+            ballService.MoveBalls();
+            UpdateBallsCollection();
         }
 
         private void UpdateBallsCollection()
         {
-            Balls.Clear(); // Czyszczenie kolekcji.
+            Balls.Clear();
             foreach (var ball in ballService.GetBalls())
             {
-                Balls.Add(ball); // Dodawanie piłek do kolekcji.
+                Balls.Add(ball);
             }
+            OnPropertyChanged(nameof(Balls));
         }
     }
+
 
 
 }
