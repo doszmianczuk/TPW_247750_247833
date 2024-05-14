@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Reactive.Linq;
-
+//Dawid Oszmiańczuk, Wiktor Żelechowski
 
 //Główne okno aplikacji, które inicjalizuje ViewModel, BallService i odpowiada na interakcje użytkownika.
 
