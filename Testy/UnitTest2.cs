@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BallSimulator;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace BallSimulator.Tests
 {
@@ -39,6 +41,18 @@ namespace BallSimulator.Tests
             Assert.AreNotEqual(initialX, newPosition.X); // Sprawdza, czy pozycja X piłki zmieniła się.
             Assert.AreNotEqual(initialY, newPosition.Y); // Sprawdza, czy pozycja Y piłki zmieniła się.
         }
+        [TestClass]
+        public class BallRendererTests
+        {
+            private Canvas _canvas;
+            private Prezentacja _renderer;
 
+            [TestInitialize]
+            public void Initialize()
+            {
+                _canvas = new Canvas();
+                _renderer = new Prezentacja();
+            }
+        }
     }
 }

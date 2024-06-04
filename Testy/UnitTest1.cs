@@ -18,6 +18,7 @@ namespace Testy
             _testBall = new Model { X = 10, Y = 10, VelocityX = 1, VelocityY = 1, Diameter = 5 }; // Tworzenie testowej pi³ki.
         }
 
+
         [TestMethod]
         public void AddBall_ShouldAddNewBall()
         {
@@ -67,6 +68,24 @@ namespace Testy
             Assert.IsFalse(balls.Any()); // Sprawdzenie, czy lista jest pusta.
             _mockDataService.Verify(x => x.ClearBalls(), Times.Once); // Sprawdzenie, czy metoda zosta³a wywo³ana raz.
         }
+        [TestMethod]
+        public void LoggingDoesNotAffectBallBehavior()
+        {
+            // Arrange
+            var data = new Data();
+            var ball = new Model { Diameter = 5, Mass = 1 };
+            data.AddBall(ball);
+            var initialCount = data.GetBalls().Count();
+
+            // Act
+            data.LogDiagnostics("diagnostics.json");
+            var countAfterLogging = data.GetBalls().Count();
+
+            // Assert
+            Assert.AreEqual(initialCount, countAfterLogging);
+        }
+
+
     }
 
 

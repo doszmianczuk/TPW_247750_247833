@@ -36,8 +36,11 @@ namespace BallSimulator
 
         public void UpdateGame()
         {
-            ballService.MoveBalls();
-            UpdateBallsCollection();
+            lock (Balls)
+            {
+                ballService.MoveBalls();
+                UpdateBallsCollection();
+            }
         }
 
         private void UpdateBallsCollection()
@@ -50,6 +53,7 @@ namespace BallSimulator
             OnPropertyChanged(nameof(Balls));
         }
     }
+
 
 
 

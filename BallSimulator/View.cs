@@ -5,6 +5,10 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Reactive.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Subjects;
+using System.Reactive;
+
 //Dawid Oszmiańczuk, Wiktor Żelechowski
 
 //Główne okno aplikacji, które inicjalizuje ViewModel, BallService i odpowiada na interakcje użytkownika.
@@ -13,38 +17,65 @@ namespace BallSimulator
 {
     public partial class MainWindow : Window
     {
-        private ViewModel gameViewModel; // ViewModel dla gry.
-        private DispatcherTimer gameTimer; // Timer do cyklicznego aktualizowania stanu gry.
-        private Prezentacja ballRenderer; // Obiekt do rysowania piłek na kanwie.
+        private ViewModel gameViewModel;
+        private IDisposable gameUpdateSubscription;
+        private Prezentacja ballRenderer;
+        private Subject<Unit> startGameSubject;
+        private Subject<Unit> updateGameSubject;
 
         public MainWindow()
         {
-            InitializeComponent(); // Metoda inicjalizująca komponenty UI zdefiniowane w XAML.
-            gameViewModel = new ViewModel(new BallService(800, 450)); // Inicjalizacja ViewModel z serwisem piłek.
-            DataContext = gameViewModel; // Ustawienie DataContext dla bindowania.
-            ballRenderer = new Prezentacja(); // Inicjalizacja renderer'a piłek.
+            InitializeComponent();
+            gameViewModel = new ViewModel(new BallService(800, 450));
+            DataContext = gameViewModel;
+            ballRenderer = new Prezentacja();
+            numBallsPicker.TextChanged += NumBallsPicker_TextChanged;
+
+            startGameSubject = new Subject<Unit>();
+            updateGameSubject = new Subject<Unit>();
+
+            startGameSubject
+                .SelectMany(_ => Observable.Interval(TimeSpan.FromMilliseconds(16)))
+                .Subscribe(_ =>
+                {
+                    updateGameSubject.OnNext(Unit.Default);
+                });
+
+            updateGameSubject
+                .Subscribe(_ =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        gameViewModel.UpdateGame();
+                        ballRenderer.DrawBalls(canvas, gameViewModel.Balls);
+                    });
+                });
+
+            this.Closed += (s, e) => DisposeSubscriptions();
         }
 
-        // Metody obsługi zdarzeń StartButton_Click, GameTimer_Tick
-
-        private void StartButton_Click(object sender, RoutedEventArgs e)
+        private void DisposeSubscriptions()
         {
-            gameTimer?.Stop();
+            gameUpdateSubscription?.Dispose();
+            startGameSubject?.OnCompleted();
+            updateGameSubject?.OnCompleted();
+        }
+
+        private void NumBallsPicker_TextChanged(object sender, TextChangedEventArgs e)
+        {
             if (int.TryParse(numBallsPicker.Text, out int numBalls))
             {
                 gameViewModel.StartGame(numBalls, (int)canvas.ActualWidth, (int)canvas.ActualHeight);
             }
-
-            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) }; //~60fps
-            gameTimer.Tick += GameTimer_Tick;
-            gameTimer.Start();
         }
 
-        private void GameTimer_Tick(object sender, EventArgs e)
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            gameViewModel.UpdateGame();
-            ballRenderer.DrawBalls(canvas, gameViewModel.Balls);
+            if (int.TryParse(numBallsPicker.Text, out int numBalls))
+            {
+                gameViewModel.StartGame(numBalls, (int)canvas.ActualWidth, (int)canvas.ActualHeight);
+                startGameSubject.OnNext(Unit.Default);
+            }
         }
-
     }
 }

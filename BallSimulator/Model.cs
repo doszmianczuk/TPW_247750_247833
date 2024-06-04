@@ -5,50 +5,61 @@ using System.Text;
 using System.Threading.Tasks;
 
 //Zawiera definicję modelu piłki, w tym jej pozycję, prędkość i średnicę.
-
 namespace BallSimulator
 {
     public class Model
     {
-        private float _x, _y, _velocityX, _velocityY, _diameter, _mass; // Prywatne zmienne dla modelu piłki.
+        private readonly object _lock = new object();
+        private float _x, _y, _velocityX, _velocityY, _diameter, _mass;
+        private int _gameWidth, _gameHeight;
 
-        public float X // Właściwość publiczna dla pozycji X.
+        public float X
         {
             get { return _x; }
-            set { _x = value; }
+            set { lock (_lock) { _x = value; } }
         }
 
-        public float Y // Właściwość publiczna dla pozycji Y.
+        public float Y
         {
             get { return _y; }
-            set { _y = value; }
+            set { lock (_lock) { _y = value; } }
         }
 
-        public float VelocityX // Właściwość publiczna dla prędkości w osi X.
+        public float VelocityX
         {
-            get { return _velocityX; }
-            set { _velocityX = value; }
+            get { lock (_lock) { return _velocityX; } }
+            set { lock (_lock) { _velocityX = value; } }
         }
 
-        public float VelocityY // Właściwość publiczna dla prędkości w osi Y.
+        public float VelocityY
         {
-            get { return _velocityY; }
-            set { _velocityY = value; }
+            get { lock (_lock) { return _velocityY; } }
+            set { lock (_lock) { _velocityY = value; } }
         }
 
-        public float Diameter // Właściwość publiczna dla średnicy piłki.
+        public float Diameter
         {
             get { return _diameter; }
             set { _diameter = value; }
         }
 
-
         public float Mass
         {
             get { return _mass; }
-            set { _mass = value; } 
+            set { _mass = value; }
+        }
+
+        public int GameWidth
+        {
+            get { return _gameWidth; }
+            set { _gameWidth = value; }
+        }
+
+        public int GameHeight
+        {
+            get { return _gameHeight; }
+            set { _gameHeight = value; }
         }
     }
-
-
 }
+

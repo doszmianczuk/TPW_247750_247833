@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows; // dla Rectangle
 
 namespace BallSimulator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Windows; // dla Rectangle
+
 
     public class QuadTree
     {
