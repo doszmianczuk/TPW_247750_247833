@@ -116,7 +116,7 @@ namespace BallSimulator
             }
         }
 
-        // Pobieranie wszystkich obiektów, które mogą kolidować z danym obiektem
+     
         public List<Model> retrieve(List<Model> returnObjects, Model model)
         {
             int index = getIndex(model);
@@ -130,7 +130,7 @@ namespace BallSimulator
             return returnObjects;
         }
 
-        // Usunięcie wszystkich obiektów
+       
         public void clear()
         {
             objects.Clear();
