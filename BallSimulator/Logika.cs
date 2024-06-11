@@ -7,14 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 
-
 namespace BallSimulator
 {
-
     public interface IBallService
     {
         void InitializeBalls(int count, int gameWidth, int gameHeight);
-        void MoveBalls();
+        Task MoveBallsAsync();
         IEnumerable<Model> GetBalls();
     }
 
@@ -29,7 +27,6 @@ namespace BallSimulator
             this.gameWidth = gameWidth;
             this.gameHeight = gameHeight;
         }
-
 
         private bool AreColliding(Model ball1, Model ball2)
         {
@@ -110,7 +107,7 @@ namespace BallSimulator
 
         private float GenerateRandomVelocity()
         {
-            return (float)(random.NextDouble() *1 + 1);
+            return (float)(random.NextDouble() * 1 + 1);
         }
 
         private float GenerateRandomMass()
@@ -118,7 +115,7 @@ namespace BallSimulator
             return random.Next(2) + 1;
         }
 
-        public void MoveBalls()
+        public async Task MoveBallsAsync()
         {
             const float speedFactor = 0.9f; // Współczynnik skalowania prędkości
 
@@ -128,7 +125,7 @@ namespace BallSimulator
                 quadTree.insert(ball);
             }
 
-            foreach (var ball in balls)
+            var tasks = balls.Select(async ball =>
             {
                 List<Model> returnObjects = new List<Model>();
                 quadTree.retrieve(returnObjects, ball);
@@ -147,10 +144,10 @@ namespace BallSimulator
                     ball.Y += ball.VelocityY * speedFactor;
                     CheckCollisionWithWalls(ball);
                 }
-            }
+            });
+
+            await Task.WhenAll(tasks);
         }
-
-
 
         public IEnumerable<Model> GetBalls()
         {

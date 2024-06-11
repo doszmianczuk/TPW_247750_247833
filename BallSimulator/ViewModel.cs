@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-//ViewModel zarządza stanem aplikacji, używając BallService do manipulacji piłkami i aktualizacji ich stanu na interfejsie użytkownika.
-
 namespace BallSimulator
 {
     public class ViewModel : INotifyPropertyChanged
@@ -34,13 +32,10 @@ namespace BallSimulator
             UpdateBallsCollection();
         }
 
-        public void UpdateGame()
+        public async Task UpdateGameAsync()
         {
-            lock (Balls)
-            {
-                ballService.MoveBalls();
-                UpdateBallsCollection();
-            }
+            await ballService.MoveBallsAsync();
+            UpdateBallsCollection();
         }
 
         private void UpdateBallsCollection()
@@ -53,8 +48,4 @@ namespace BallSimulator
             OnPropertyChanged(nameof(Balls));
         }
     }
-
-
-
-
 }

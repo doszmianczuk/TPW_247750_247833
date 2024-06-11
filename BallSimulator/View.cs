@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Dawid Oszmiańczuk, Wiktor Żelechowski
+
+//Główne okno aplikacji, które inicjalizuje ViewModel, BallService i odpowiada na interakcje użytkownika.
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,10 +11,6 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
 using System.Reactive;
-
-//Dawid Oszmiańczuk, Wiktor Żelechowski
-
-//Główne okno aplikacji, które inicjalizuje ViewModel, BallService i odpowiada na interakcje użytkownika.
 
 namespace BallSimulator
 {
@@ -42,11 +41,11 @@ namespace BallSimulator
                 });
 
             updateGameSubject
-                .Subscribe(_ =>
+                .Subscribe(async _ =>
                 {
+                    await gameViewModel.UpdateGameAsync();
                     Dispatcher.Invoke(() =>
                     {
-                        gameViewModel.UpdateGame();
                         ballRenderer.DrawBalls(canvas, gameViewModel.Balls);
                     });
                 });
