@@ -11,11 +11,13 @@ namespace BallSimulator
     public class ViewModel : INotifyPropertyChanged
     {
         private readonly BallService ballService;
+        private readonly IDataService dataService;
         public ObservableCollection<Model> Balls { get; private set; }
 
-        public ViewModel(BallService ballService)
+        public ViewModel(BallService ballService, IDataService dataService)
         {
             this.ballService = ballService;
+            this.dataService = dataService;
             this.Balls = new ObservableCollection<Model>();
         }
 
@@ -47,5 +49,11 @@ namespace BallSimulator
             }
             OnPropertyChanged(nameof(Balls));
         }
+
+        public void LogGameState(string filePath)
+        {
+            dataService.LogDiagnostics(filePath);
+        }
     }
+
 }

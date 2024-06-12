@@ -25,7 +25,7 @@ namespace BallSimulator
         public MainWindow()
         {
             InitializeComponent();
-            gameViewModel = new ViewModel(new BallService(800, 450));
+            gameViewModel = new ViewModel(new BallService(800, 450), new Data());
             DataContext = gameViewModel;
             ballRenderer = new Prezentacja();
             numBallsPicker.TextChanged += NumBallsPicker_TextChanged;
@@ -76,5 +76,11 @@ namespace BallSimulator
                 startGameSubject.OnNext(Unit.Default);
             }
         }
+
+        private void LogButton_Click(object sender, RoutedEventArgs e)
+        {
+            gameViewModel.LogGameState("C:\\Users\\Wiktor\\Desktop\\studia\\sem4\\TPW_247750_247833\\BallSimulator\\log.json");
+        }
     }
+
 }

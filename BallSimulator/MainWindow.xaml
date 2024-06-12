@@ -10,6 +10,8 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
             <TextBox x:Name="numBallsPicker" Text="10" Width="100" Margin="10"/>
             <Button Content="START" Width="100" Height="20" Margin="10" Click="StartButton_Click"/>
+            <Button Name="LogButton" Content="Log State" Click="LogButton_Click" />
+
         </StackPanel>
         <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1" Width="802" Height="452">
             <Canvas x:Name="canvas" Grid.Row="1" Width="800" Height="450" />
