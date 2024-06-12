@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.IO;
+using System.Text.Json;
+using System.Timers;
 
 namespace BallSimulator
 {
@@ -18,14 +21,18 @@ namespace BallSimulator
 
     public class BallService : IBallService
     {
+        private double _maxWidth = 582;
+        private double _maxHeight = 282;
+        private readonly Random random = new Random();
         private List<Model> balls = new List<Model>();
-        private Random random = new Random();
-        private int gameWidth, gameHeight;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private System.Timers.Timer aTimer;
+        FileStream filestream;
 
         public BallService(int gameWidth, int gameHeight)
         {
-            this.gameWidth = gameWidth;
-            this.gameHeight = gameHeight;
+            this._maxWidth = gameWidth;
+            this._maxHeight = gameHeight;
         }
 
         private bool AreColliding(Model ball1, Model ball2)
@@ -72,11 +79,11 @@ namespace BallSimulator
         {
             lock (ball)
             {
-                if (ball.X - ball.Diameter / 2 <= 0 || ball.X + ball.Diameter / 2 >= gameWidth)
+                if (ball.X - ball.Diameter / 2 <= 0 || ball.X + ball.Diameter / 2 >= _maxWidth)
                 {
                     ball.VelocityX = -ball.VelocityX;
                 }
-                if (ball.Y - ball.Diameter / 2 <= 0 || ball.Y + ball.Diameter / 2 >= gameHeight)
+                if (ball.Y - ball.Diameter / 2 <= 0 || ball.Y + ball.Diameter / 2 >= _maxHeight)
                 {
                     ball.VelocityY = -ball.VelocityY;
                 }
@@ -85,24 +92,24 @@ namespace BallSimulator
 
         public void InitializeBalls(int count, int gameWidth, int gameHeight)
         {
-            this.gameWidth = gameWidth;
-            this.gameHeight = gameHeight;
+            _maxWidth = gameWidth;
+            _maxHeight = gameHeight;
             balls.Clear();
+
             for (int i = 0; i < count; i++)
             {
-                float mass = GenerateRandomMass();
-                balls.Add(new Model
-                {
-                    X = random.Next(10, gameWidth - 10),
-                    Y = random.Next(10, gameHeight - 10),
-                    VelocityX = GenerateRandomVelocity(),
-                    VelocityY = GenerateRandomVelocity(),
-                    Diameter = 10,
-                    Mass = mass,
-                    GameWidth = gameWidth,
-                    GameHeight = gameHeight
-                });
+                Model ball = new Model();
+                ball.X = random.Next(10, (int)(_maxWidth));
+                ball.Y = random.Next(10, (int)(_maxHeight));
+                ball.VelocityX = GenerateRandomVelocity();
+                ball.VelocityY = GenerateRandomVelocity();
+                ball.Diameter = 10;
+                ball.Mass = random.Next(1, 4);
+                balls.Add(ball);
             }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            StartLogging("log.json");
         }
 
         private float GenerateRandomVelocity()
@@ -117,41 +124,47 @@ namespace BallSimulator
 
         public async Task MoveBallsAsync()
         {
-            const float speedFactor = 0.9f; // Współczynnik skalowania prędkości
-
-            QuadTree quadTree = new QuadTree(0, new Rect(0, 0, gameWidth, gameHeight));
-            foreach (var ball in balls)
+            await Task.Run(() =>
             {
-                quadTree.insert(ball);
-            }
-
-            var tasks = balls.Select(async ball =>
-            {
-                List<Model> returnObjects = new List<Model>();
-                quadTree.retrieve(returnObjects, ball);
-
-                foreach (var otherBall in returnObjects)
+                foreach (var ball in balls)
                 {
-                    if (ball != otherBall && AreColliding(ball, otherBall))
+                    ball.X += ball.VelocityX;
+                    ball.Y += ball.VelocityY;
+
+                    if (ball.X <= 0 || ball.X >= _maxWidth)
                     {
-                        ResolveCollision(ball, otherBall);
+                        ball.VelocityX = -ball.VelocityX;
+                    }
+                    if (ball.Y <= 0 || ball.Y >= _maxHeight)
+                    {
+                        ball.VelocityY = -ball.VelocityY;
                     }
                 }
-
-                lock (ball)
-                {
-                    ball.X += ball.VelocityX * speedFactor;
-                    ball.Y += ball.VelocityY * speedFactor;
-                    CheckCollisionWithWalls(ball);
-                }
             });
-
-            await Task.WhenAll(tasks);
         }
 
         public IEnumerable<Model> GetBalls()
         {
             return balls;
+        }
+
+        private void StartLogging(string filePath)
+        {
+            filestream = File.Create(filePath);
+
+            aTimer = new System.Timers.Timer();
+            aTimer.Elapsed += SaveLog;
+            aTimer.Interval = 1000; // Log every second
+            aTimer.Start();
+        }
+
+        private void SaveLog(object source, ElapsedEventArgs e)
+        {
+            foreach (var ball in balls)
+            {
+                JsonSerializer.SerializeAsync(filestream, ball);
+            }
+            filestream.Flush();
         }
     }
 }

@@ -11,16 +11,16 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
 using System.Reactive;
+using System;
+
 
 namespace BallSimulator
 {
     public partial class MainWindow : Window
     {
         private ViewModel gameViewModel;
-        private IDisposable gameUpdateSubscription;
         private Prezentacja ballRenderer;
-        private Subject<Unit> startGameSubject;
-        private Subject<Unit> updateGameSubject;
+        private DispatcherTimer gameTimer;
 
         public MainWindow()
         {
@@ -30,34 +30,20 @@ namespace BallSimulator
             ballRenderer = new Prezentacja();
             numBallsPicker.TextChanged += NumBallsPicker_TextChanged;
 
-            startGameSubject = new Subject<Unit>();
-            updateGameSubject = new Subject<Unit>();
-
-            startGameSubject
-                .SelectMany(_ => Observable.Interval(TimeSpan.FromMilliseconds(16)))
-                .Subscribe(_ =>
-                {
-                    updateGameSubject.OnNext(Unit.Default);
-                });
-
-            updateGameSubject
-                .Subscribe(async _ =>
-                {
-                    await gameViewModel.UpdateGameAsync();
-                    Dispatcher.Invoke(() =>
-                    {
-                        ballRenderer.DrawBalls(canvas, gameViewModel.Balls);
-                    });
-                });
-
-            this.Closed += (s, e) => DisposeSubscriptions();
+            InitializeGameTimer();
         }
 
-        private void DisposeSubscriptions()
+        private void InitializeGameTimer()
         {
-            gameUpdateSubscription?.Dispose();
-            startGameSubject?.OnCompleted();
-            updateGameSubject?.OnCompleted();
+            gameTimer = new DispatcherTimer();
+            gameTimer.Interval = TimeSpan.FromMilliseconds(16); // 60 FPS
+            gameTimer.Tick += GameTimer_Tick;
+        }
+
+        private async void GameTimer_Tick(object sender, EventArgs e)
+        {
+            await gameViewModel.UpdateGameAsync();
+            ballRenderer.DrawBalls(canvas, gameViewModel.Balls);
         }
 
         private void NumBallsPicker_TextChanged(object sender, TextChangedEventArgs e)
@@ -73,14 +59,19 @@ namespace BallSimulator
             if (int.TryParse(numBallsPicker.Text, out int numBalls))
             {
                 gameViewModel.StartGame(numBalls, (int)canvas.ActualWidth, (int)canvas.ActualHeight);
-                startGameSubject.OnNext(Unit.Default);
+                gameTimer.Start();
             }
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            gameTimer.Stop();
         }
 
         private void LogButton_Click(object sender, RoutedEventArgs e)
         {
-            gameViewModel.LogGameState("C:\\Users\\Wiktor\\Desktop\\studia\\sem4\\TPW_247750_247833\\BallSimulator\\log.json");
+            gameViewModel.LogGameState("log.json");
         }
     }
-
 }
+
